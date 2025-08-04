@@ -104,8 +104,14 @@ captioning_service = ImageCaptioningService()
 # Demo mode if no API key
 IS_DEMO_MODE = os.getenv("GEMINI_API_KEY", "").strip() == ""
 
+# Keep the existing root endpoint with template rendering
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
+    return templates.TemplateResponse(request, "index.html")
+
+# Add a new endpoint for API status
+@app.get("/api/status")
+async def get_status():
     return {"status": "API is up!"}
 
 @app.post("/upload-image/")
