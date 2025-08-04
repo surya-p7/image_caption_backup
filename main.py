@@ -6,6 +6,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -13,6 +14,15 @@ load_dotenv()
 
 # --- FastAPI App Initialization ---
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Mount static files
 if os.path.isdir("static"):
@@ -96,7 +106,7 @@ IS_DEMO_MODE = os.getenv("GEMINI_API_KEY", "").strip() == ""
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    return templates.TemplateResponse(request, "index.html")
+    return {"status": "API is up!"}
 
 @app.post("/upload-image/")
 async def upload_image(
