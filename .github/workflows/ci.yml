@@ -1,12 +1,15 @@
-name: Python CI
+name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+# Add environment variables with a dummy key for testing
 env:
-  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  GEMINI_API_KEY: dummy_key_for_testing
+  PYTHON_VERSION: "3.10"
 
 jobs:
   build:

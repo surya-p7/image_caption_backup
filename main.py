@@ -91,6 +91,9 @@ class ImageCaptioningService:
 # --- App Setup ---
 captioning_service = ImageCaptioningService()
 
+# Demo mode if no API key
+IS_DEMO_MODE = os.getenv("GEMINI_API_KEY", "").strip() == ""
+
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse(request, "index.html")
@@ -101,6 +104,16 @@ async def upload_image(
     language: str = Form("en"),
     include_summary: bool = Form(False)
 ):
+    """Handle image upload and return captions."""
+    # Check for demo mode first
+    if IS_DEMO_MODE:
+        return {
+            "success": True,
+            "original_caption": "This is a demo caption. The API key may be missing or invalid.",
+            "improved_caption": "Improved: Demo caption",
+            "provider": "demo"
+        }
+        
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image")
 
