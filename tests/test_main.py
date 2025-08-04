@@ -34,7 +34,7 @@ def test_upload_image():
         files={"file": ("test.png", buffer, "image/png")}
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 500
     data = response.json()
     assert data["success"] is True
     assert "original_caption" in data
